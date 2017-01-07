@@ -2,21 +2,34 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { HomePage } from '../pages/home/home';
+import { AngularFire } from 'angularfire2';
 
+// paginas
+import { TabsPage } from '../pages/tabs/tabs';
+import { LoginPage } from '../pages/login/login';
 
 @Component({
-  templateUrl: 'app.html'
+  template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = HomePage;
+  rootPage: any;
 
-  constructor(platform: Platform) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+  constructor(
+    private platform: Platform,
+    af: AngularFire
+  ) {
+    af.auth.subscribe( user => {
+      if (user) {
+        this.rootPage = TabsPage;
+      } else {
+        this.rootPage = LoginPage;
+      }
+    });
+    this.platform.ready().then(() => {
       StatusBar.styleDefault();
       Splashscreen.hide();
-    });
+    })
+
   }
+
 }

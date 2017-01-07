@@ -1,0 +1,19 @@
+
+<ion-grid>
+  <ion-row>
+    <ion-col width-11 center>
+      <div (click)="previous()"><ion-icon name="arrow-back"></ion-icon></div>
+    </ion-col>
+    <ion-col width-11 *ngFor="let day of weekDays"
+      [class.today]="day.isToday"
+      [class.active]="day.date.isSame(selected)">
+      <div (click)="select(day)">
+        <div>{{day.name}}</div>
+        <div>{{day.number}}</div>
+      </div>
+    </ion-col>
+    <ion-col width-11 center>
+      <div (click)="next()"><ion-icon name="arrow-forward"></ion-icon></div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

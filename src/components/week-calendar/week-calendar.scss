@@ -1,0 +1,29 @@
+week-calendar {
+
+  div {
+    text-align: center;
+  }
+
+  // button {
+  //   text-align: center;
+  //   background-color: transparent;
+  //   display: block;
+  //   width: 100%;
+  // }
+
+  ion-row {
+    border-style: solid;
+    border-width: 0.5px;
+    border-radius: 5px;
+    border-color: lightgray;
+  }
+
+  .active {
+    color: #FF0000;
+  }
+
+  .today {
+    color: rgb(42, 60, 170)
+  }
+
+}
