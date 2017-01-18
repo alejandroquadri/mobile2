@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 import { AngularFire } from 'angularfire2';
+import 'rxjs/add/operator/take';
 
 // clases
 import { ProfileForm } from './profileForm';
@@ -57,12 +58,13 @@ export class ProfilePage {
 
   updateAvatar(){
     this.camera.takePicture();
-    this.camera.imageData
-    .subscribe((imageData) => {
-      let vuelta = JSON.stringify(imageData);
-      console.log('data de observable', vuelta);
+    let profileImageObs = this.camera.imageData.take(3)
+    profileImageObs.subscribe((imageData:any) => {
+      console.log('data de observable en profile', JSON.stringify(imageData));
       this.profileData.updateProfile(imageData);
-    })
+    },
+    err => console.log('error', err),
+    () => console.log('termino profileImageObs'))
   }
 
 }

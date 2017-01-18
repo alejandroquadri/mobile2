@@ -12,7 +12,8 @@
 </ion-header>
 
 <ion-content padding>
-  <diary-entry [day]="day"></diary-entry>
-  <button ion-button block (click)="updateDiary()">Prueba</button>
-  {{ diary | json }}
+  <diary-entry [meal]="'desayuno'" [day]="day" [mealInput]="diary"></diary-entry>
+  <diary-entry [meal]="'almuerzo'" [day]="day" [mealInput]="diary"></diary-entry>
+  <diary-entry [meal]="'te'" [day]="day" [mealInput]="diary"></diary-entry>
+  <diary-entry [meal]="'cena'" [day]="day" [mealInput]="diary"></diary-entry>
 </ion-content>

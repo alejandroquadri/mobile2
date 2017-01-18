@@ -1,22 +1,40 @@
 import { Component } from '@angular/core';
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { NavController } from 'ionic-angular';
+// import 'rxjs/add/operator/take';
 
-/*
-  Generated class for the Config page.
+import { CameraService } from '../../providers/camera-service';
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+
 @Component({
   selector: 'page-config',
   templateUrl: 'config.html'
 })
 export class ConfigPage {
 
-  constructor(public navCtrl: NavController) {}
+  // numberSubject = new BehaviorSubject(1);
+  // numberObs = this.numberSubject.asObservable();
+  value = 0;
+
+  constructor(
+    public navCtrl: NavController,
+    public camera: CameraService
+  ) {}
 
   ionViewDidLoad() {
-    console.log('Hello ConfigPage Page');
+    let obsConfig = this.camera.numberObs.take(3)
+    obsConfig.subscribe( valor => {
+      console.log('va a sumar', valor);
+      this.value = this.value + valor;
+    },
+    err => console.log('error', err),
+    () => console.log('termino')
+    )
+  }
+
+  add(){
+    // this.numberSubject.next(1);
+    this.camera.addOne()
   }
 
 }

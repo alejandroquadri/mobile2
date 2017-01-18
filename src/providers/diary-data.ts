@@ -8,20 +8,34 @@ import { AuthData } from './auth-data';
 @Injectable()
 export class DiaryData {
 
-  public diaryObs: Observable<any>;
+  public dayObs: Observable<any>;
   current;
 
   constructor(
     public af: AngularFire,
     public authData: AuthData
-  ) {
-    this.diaryObs = af.database.object((`/diary/${authData.fireAuth.uid}`))
+  ) {}
+
+  getDay(day: string){
+    this.dayObs = this.af.database.object(`/diary/${this.authData.fireAuth.uid}/${day}`)
   }
 
-  updateDiary(form){
-    console.log('update diary en service', form);
-    this.af.database.object(`/diary/${this.authData.fireAuth.uid}`)
-    .update(form)
+  newImage(image, day:string, meal:string) {
+    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}`)
+    .push(image).then( ret => {
+      console.log('retorno', ret.key);
+      return ret.key
+    });
+  }
+
+  updateImage(key, image, day:string, meal:string) {
+    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}`)
+    .update(key, image);
+  }
+
+  updateText(form, day:string, meal:string){
+    this.af.database.object(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}`)
+    .update(form);
   }
 
 }

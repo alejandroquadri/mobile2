@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Camera, File } from 'ionic-native';
 import { ActionSheetController } from 'ionic-angular';
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { AngularFire } from 'angularfire2';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AngularFire, FirebaseApp } from 'angularfire2';
 
 // providers
 import { AuthData } from './auth-data';
@@ -13,14 +13,20 @@ declare var cordova: any;
 @Injectable()
 export class CameraService {
 
-  public imageData = new BehaviorSubject({});
+  public storage: any;
+  public imageDataSubject = new BehaviorSubject({});
+  public imageData = this.imageDataSubject.asObservable();
   public data = {};
 
   constructor(
     public asCtrl: ActionSheetController,
     public af: AngularFire,
-    public authData: AuthData
-  ) {}
+    public authData: AuthData,
+    @Inject(FirebaseApp) firebaseApp: any
+  ) {
+    this.storage = firebaseApp.storage()
+    console.log('storage', this.storage);
+  }
 
   takePicture() {
     this.openActionSheet()
@@ -29,6 +35,7 @@ export class CameraService {
   // esta funcion es para poder dar el path correcto de la foto guardadad
   // en el dispositivo
   pathForImage(img) {
+    console.log('usa path con esta imagen', img);
     if (img === null) {
       return '';
     } else {
@@ -96,8 +103,10 @@ export class CameraService {
     console.log('arranca copyFileToLocalDir')
     File.copyFile(namePath, currentName, cordova.file.dataDirectory, newFileName)
     .then((success) => {
+      console.log('copio correctamente')
       this.data['localPath'] = this.pathForImage(newFileName);
-      this.imageData.next(this.data);
+      console.log('data', JSON.stringify(this.data))
+      this.imageDataSubject.next(this.data);
       this.toBlob(newFileName)
     }, (err) => {
       console.log('Error en copyFileToLocalDir');
@@ -126,11 +135,11 @@ export class CameraService {
 
   // uploads image
   private uploadImage (image){
-    console.log('arranca uploadImage2', image);
+    console.log('arranca uploadImage2', JSON.stringify(image));
     let imageName = 'almuerzo';
-    let storageRef = firebase.storage().ref()
-    let uploadTask = storageRef.child(this.authData.fireAuth.uid + '/images/diario').child(imageName)
-    .put(image)
+    console.log('auth', this.authData.fireAuth.uid);
+    let storageRef = this.storage.ref()
+    let uploadTask = storageRef.child(this.authData.fireAuth.uid + '/images/diario').child(imageName).put(image)
     uploadTask.on('state_changed', (snapshot) => {
         console.info(snapshot);
     }, (error) => {
@@ -138,8 +147,17 @@ export class CameraService {
     }, () => {
         let downloadURL = uploadTask.snapshot.downloadURL;
         this.data['url'] = downloadURL;
-        this.imageData.next(this.data);
+        this.imageDataSubject.next(this.data);
     })
   }
+
+  // prueba obs en config
+  numberSubject = new BehaviorSubject(1);
+  numberObs = this.numberSubject.asObservable();
+
+  addOne(){
+    this.numberSubject.next(1);
+  }
+  // fin prueba
 
 }
