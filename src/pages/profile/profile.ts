@@ -57,8 +57,8 @@ export class ProfilePage {
   }
 
   updateAvatar(){
-    this.camera.takePicture();
-    let profileImageObs = this.camera.imageData.take(3)
+    this.camera.takePicture('profile');
+    let profileImageObs = this.camera.imageData.take(2)
     profileImageObs.subscribe((imageData:any) => {
       console.log('data de observable en profile', JSON.stringify(imageData));
       this.profileData.updateProfile(imageData);

@@ -9,6 +9,7 @@
     <div *ngIf="mealInput[meal]?.images">
       <ion-slides pager [options]="mySlideOptions">
         <ion-slide *ngFor="let image of mealInput[meal].images">
+          {{ image | json }} 
           <img [src]="image.localPath" class="slide-image"/>
         </ion-slide>
       </ion-slides>

@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Camera, File } from 'ionic-native';
 import { ActionSheetController } from 'ionic-angular';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { AngularFire, FirebaseApp } from 'angularfire2';
 
 // providers
@@ -14,9 +15,10 @@ declare var cordova: any;
 export class CameraService {
 
   public storage: any;
-  public imageDataSubject = new BehaviorSubject({});
+  public imageDataSubject = new Subject();
   public imageData = this.imageDataSubject.asObservable();
   public data = {};
+  public path;
 
   constructor(
     public asCtrl: ActionSheetController,
@@ -28,7 +30,8 @@ export class CameraService {
     console.log('storage', this.storage);
   }
 
-  takePicture() {
+  takePicture(path) {
+    this.path = path;
     this.openActionSheet()
   }
 
@@ -136,10 +139,11 @@ export class CameraService {
   // uploads image
   private uploadImage (image){
     console.log('arranca uploadImage2', JSON.stringify(image));
-    let imageName = 'almuerzo';
+    let imageName = this.createFileName();
     console.log('auth', this.authData.fireAuth.uid);
     let storageRef = this.storage.ref()
-    let uploadTask = storageRef.child(this.authData.fireAuth.uid + '/images/diario').child(imageName).put(image)
+    let uploadTask = storageRef.child(`${this.authData.fireAuth.uid}/images/${this.path}`).child(imageName).put(image)
+
     uploadTask.on('state_changed', (snapshot) => {
         console.info(snapshot);
     }, (error) => {
