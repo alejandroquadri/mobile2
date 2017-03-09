@@ -1,28 +1,11 @@
-// import { NgModule, ErrorHandler } from '@angular/core';
-// import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-// import { MyApp } from './app.component';
-// import { HomePage } from '../pages/home/home';
-//
-// @NgModule({
-//   declarations: [
-//     MyApp,
-//     HomePage
-//   ],
-//   imports: [
-//     IonicModule.forRoot(MyApp)
-//   ],
-//   bootstrap: [IonicApp],
-//   entryComponents: [
-//     MyApp,
-//     HomePage
-//   ],
-//   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
-// })
-// export class AppModule {}
+
 
 import { NgModule, ErrorHandler  } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+
+// importo AngularFire2 module
+import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 // paginas importadas
 import { DiaryPage } from '../pages/diary/diary';
@@ -46,9 +29,6 @@ import { AuthData } from '../providers/auth-data';
 import { ProfileData } from '../providers/profile-data';
 import { CameraService } from '../providers/camera-service';
 import { DiaryData } from '../providers/diary-data';
-
-// importo AngularFire2 module
-import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 // settings AF2
 export const firebaseConfig = {

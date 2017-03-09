@@ -32,6 +32,7 @@ export class ProfilePage {
   }
 
   ionViewDidLoad() {
+    this.profileData.setProfile();
     this.profileData.profileObs
     .subscribe( data => {
       console.log('actualiza', data);

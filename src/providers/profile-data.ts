@@ -14,12 +14,16 @@ export class ProfileData {
     public af: AngularFire,
     public authData: AuthData
   ) {
-    this.profileObs = af.database.object(`/userProfile/${authData.fireAuth.uid}`);
+    this.setProfile();
   }
 
   updateProfile(form){
     this.af.database.object(`/userProfile/${this.authData.fireAuth.uid}`)
     .update(form)
+  }
+
+  setProfile(){
+    this.profileObs = this.af.database.object(`/userProfile/${this.authData.fireAuth.uid}`);
   }
 
 }

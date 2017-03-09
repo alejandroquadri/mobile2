@@ -3,26 +3,32 @@
   <ion-card>
 
     <ion-card-header>
-      {{ meal }}
+      <span left >{{ meal }}</span>
     </ion-card-header>
 
-    <div *ngIf="mealInput[meal]?.images">
+    <div class="slides" *ngIf="mealInput[meal]?.images">
+      <div class="addPicture">
+        <button ion-fab mini (click)="addPicture()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </div>
       <ion-slides pager [options]="mySlideOptions">
-        <ion-slide *ngFor="let image of mealInput[meal].images">
-          {{ image | json }} 
+        <ion-slide *ngFor="let image of images | async">
           <img [src]="image.localPath" class="slide-image"/>
         </ion-slide>
       </ion-slides>
     </div>
 
-
-    <img *ngIf="!mealInput[meal]?.images" src="./assets/images/desayuno.jpg"/>
-
-    <ion-fab class="addPicture">
-      <button ion-fab mini (click)="addPicture()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-fab>
+    <div *ngIf="!mealInput[meal]?.images" class="newMeal">
+      <div class="addPicture">
+        <button ion-fab mini (click)="addPicture()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </div>
+      <div class="camera" (click)="addPicture()">
+        <ion-icon name="camera"></ion-icon>
+      </div>
+    </div>
 
     <ion-card-content (click)="addText()">
       <span *ngIf="mealInput[meal]">{{ mealInput[meal].text }}</span>

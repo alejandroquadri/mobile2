@@ -9,7 +9,7 @@ import { AuthData } from './auth-data';
 export class DiaryData {
 
   public dayObs: Observable<any>;
-  current;
+  lastArray: string;
 
   constructor(
     public af: AngularFire,
@@ -21,15 +21,16 @@ export class DiaryData {
   }
 
   newImage(image, day:string, meal:string) {
-    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}`)
+    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}/images`)
     .push(image).then( ret => {
       console.log('retorno', ret.key);
+      this.lastArray = ret.key;
       return ret.key
     });
   }
 
   updateImage(key, image, day:string, meal:string) {
-    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}`)
+    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}/images`)
     .update(key, image);
   }
 

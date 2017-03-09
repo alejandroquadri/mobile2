@@ -7,7 +7,6 @@ import * as moment from 'moment';
 })
 export class WeekCalendarComponent {
 
-  //selected: any;
   weekDays: any;
 
   @Input() selected: any;

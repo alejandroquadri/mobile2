@@ -1,39 +1,44 @@
-import { Component, Input } from '@angular/core';
-// import { Slides } from 'ionic-angular';
-// import { ViewChild } from '@angular/core';
+import { Component, Input, OnInit , OnChanges} from '@angular/core';
 import { AlertController } from 'ionic-angular';
-import { CameraService } from '../../providers/camera-service';
-import { DiaryData } from '../../providers/diary-data';
-// import * as moment from 'moment';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/skip';
+import {AngularFire, FirebaseListObservable} from 'angularfire2';
 
+// servicios
+import { CameraService } from '../../providers/camera-service';
+import { DiaryData } from '../../providers/diary-data';
+import { AuthData } from '../../providers/auth-data';
 
 @Component({
   selector: 'diary-entry',
   templateUrl: 'diary-entry.html'
 })
-export class DiaryEntryComponent {
+
+export class DiaryEntryComponent implements OnInit, OnChanges {
 
   @Input() day;
   @Input() meal: string;
   @Input() mealInput
   text: string;
-  image: any = "./assets/images/desayuno.jpg";
   lastImage: string;
-  lastArray;
-
-  // mySlideOptions = {
-  //   initialSlide: 0,
-  //   loop: true,
-  //   pager: true
-  // };
+  images: FirebaseListObservable<any>;
 
   constructor(
     public camera: CameraService,
     public alertCtrl: AlertController,
-    public diaryData: DiaryData
-  ) {}
+    public diaryData: DiaryData,
+    public af: AngularFire,
+    public authData: AuthData
+  ) {
+  }
+
+  ngOnInit() {
+    this.images = this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${this.day.format("YYYYMMDD")}/${this.meal}/images`);
+  }
+
+  ngOnChanges() {
+    this.images = this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${this.day.format("YYYYMMDD")}/${this.meal}/images`);
+  }
 
   addText(){
     let alert = this.alertCtrl.create({
@@ -60,30 +65,6 @@ export class DiaryEntryComponent {
     alert.present();
   }
 
-  // addPicture(){
-  //   this.camera.takePicture();
-  //   let diaryImageObs = this.camera.imageData.take(2);
-  //   diaryImageObs.subscribe(
-  //     (imageData:any) => {
-  //
-  //       console.log('data de observable en diary-entry', JSON.stringify(imageData));
-  //       let lastArray;
-  //
-  //       if (imageData.photoURL) {
-  //         console.log('vuelta con photoUrl');
-  //         this.diaryData.updateImage(lastArray, imageData, this.day.format("YYYYMMDD"), this.meal);
-  //       } else if (imageData.localPath) {
-  //         console.log('vuelta con localPath');
-  //         lastArray = this.diaryData.newImage(imageData, this.day.format("YYYYMMDD"), this.meal);
-  //         console.log('lastArray', lastArray);
-  //         this.addText();
-  //       }
-  //     },
-  //     err => console.log('error en diaryImageObs', err),
-  //     () => console.log('termino diaryImageObs')
-  //   )
-  // }
-
   addPicture(){
     let day: string = this.day.format("YYYYMMDD");
     this.camera.takePicture('diary');
@@ -92,22 +73,24 @@ export class DiaryEntryComponent {
 
     diaryImageObsFirst.subscribe(
       (imageData:any) => {
-        console.log('data de observable en diary-entry first', JSON.stringify(imageData));
-        this.lastArray = this.diaryData.newImage(imageData, day, this.meal);
+        console.log('data de observable en diary-entry first');
+        this.diaryData.newImage(imageData, day, this.meal);
       },
       err => console.log('error en diaryImageObs first', err),
-      () => console.log('termino diaryImageObs first')
+      () => {
+        console.log('termino diaryImageObs first')
+        if(!this.mealInput[this.meal]) { this.addText();}
+      }
     )
 
     diaryImageObsSecond.subscribe(
       (imageData:any) => {
-        console.log('data de observable en diary-entry second', JSON.stringify(imageData));
-        this.diaryData.updateImage(this.lastArray, imageData, day, this.meal);
+        console.log('data de observable en diary-entry second');
+        this.diaryData.updateImage(this.diaryData.lastArray, imageData, day, this.meal);
       },
       err => console.log('error en diaryImageObs second', err),
       () => console.log('termino diaryImageObs second')
     )
-
   }
 
 }
