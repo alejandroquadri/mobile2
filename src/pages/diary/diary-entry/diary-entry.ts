@@ -5,9 +5,9 @@ import 'rxjs/add/operator/skip';
 import {AngularFire, FirebaseListObservable} from 'angularfire2';
 
 // servicios
-import { CameraService } from '../../providers/camera-service';
-import { DiaryData } from '../../providers/diary-data';
-import { AuthData } from '../../providers/auth-data';
+import { CameraService } from '../../../providers/camera-service';
+import { DiaryData } from '../../../providers/diary-data';
+import { AuthData } from '../../../providers/auth-data';
 
 @Component({
   selector: 'diary-entry',
@@ -18,10 +18,11 @@ export class DiaryEntryComponent implements OnInit, OnChanges {
 
   @Input() day;
   @Input() meal: string;
-  @Input() mealInput
+  @Input() mealInput;
   text: string;
   lastImage: string;
   images: FirebaseListObservable<any>;
+  mealList;
 
   constructor(
     public camera: CameraService,

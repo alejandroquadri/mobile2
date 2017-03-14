@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFire } from 'angularfire2';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -18,6 +18,10 @@ export class DiaryData {
 
   getDay(day: string){
     this.dayObs = this.af.database.object(`/diary/${this.authData.fireAuth.uid}/${day}`)
+  }
+
+  getDay2(day: string): FirebaseListObservable<any[]> {
+    return this.af.database.list(`/diary2/${this.authData.fireAuth.uid}/${day}`)
   }
 
   newImage(image, day:string, meal:string) {

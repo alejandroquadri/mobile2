@@ -6,28 +6,31 @@ import * as moment from 'moment';
 // servicios
 import { DiaryData } from '../../providers/diary-data';
 
+// pipes
+import { SortPipe } from '../../shared/pipes/sort.pipe';
+import { SortAddPipe } from '../../shared/pipes/sortAdd.pipe';
+
 @Component({
   selector: 'page-diary',
-  templateUrl: 'diary.html'
+  templateUrl: 'diary.html',
 })
 export class DiaryPage {
 
   day: any = moment()
   diary;
-  meals = [
-    { title: 'Desayuno', order: '0'},
-    { title: 'Almuerzo', order: '1'},
-    { title: 'Te', order: '2'},
-    { title: 'Cena', order: '3'}
-  ]
+  diary2;
 
   constructor(
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public diaryData: DiaryData,
     public camera: CameraService,
+    private sortPipe: SortPipe,
+    private sortAddPipe: SortAddPipe
   ) {
     this.diaryData.getDay(this.day.format("YYYYMMDD"));
+    this.getData2();
+    // this.diary2 = this.diaryData.getDay2(this.day.format("YYYYMMDD"))
   }
 
   ionViewDidLoad() {
@@ -37,9 +40,16 @@ export class DiaryPage {
   getData(){
     this.diaryData.dayObs
     .subscribe( data => {
-      console.log('data', data);
       if (!data.$value) {console.log('vacio')}
       this.diary = data;
+    })
+  }
+
+  getData2() {
+    this.diaryData.getDay2(this.day.format("YYYYMMDD"))
+    .subscribe( data => {
+      this.diary2 = this.sortAddPipe.transform(data, 'order', true);
+      console.log('diary2', this.diary2);
     })
   }
 
@@ -47,6 +57,7 @@ export class DiaryPage {
     this.day = day.date;
     this.diaryData.getDay(this.day.format("YYYYMMDD"));
     this.getData();
+    this.getData2();
   }
 
 

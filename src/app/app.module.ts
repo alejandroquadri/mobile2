@@ -21,14 +21,18 @@ import { ProgressPage } from '../pages/progress/progress';
 import { CoachPage } from '../pages/coach/coach';
 
 // Components
-import { WeekCalendarComponent } from '../components/week-calendar/week-calendar';
-import { DiaryEntryComponent } from '../components/diary-entry/diary-entry';
+import { WeekCalendarComponent } from '../pages/diary/week-calendar/week-calendar';
+import { DiaryEntryComponent } from '../pages/diary/diary-entry/diary-entry';
 
 // providers importados
 import { AuthData } from '../providers/auth-data';
 import { ProfileData } from '../providers/profile-data';
 import { CameraService } from '../providers/camera-service';
 import { DiaryData } from '../providers/diary-data';
+
+// pipes
+import { SortPipe } from '../shared/pipes/sort.pipe';
+import { SortAddPipe } from '../shared/pipes/sortAdd.pipe';
 
 // settings AF2
 export const firebaseConfig = {
@@ -60,7 +64,9 @@ const myFirebaseAuthConfig = {
     ProgressPage,
     CoachPage,
     WeekCalendarComponent,
-    DiaryEntryComponent
+    DiaryEntryComponent,
+    SortPipe,
+    SortAddPipe
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -88,7 +94,9 @@ const myFirebaseAuthConfig = {
     AuthData,
     ProfileData,
     CameraService,
-    DiaryData
+    DiaryData,
+    SortPipe,
+    SortAddPipe
   ]
 })
 export class AppModule {}
