@@ -29,10 +29,6 @@ export class DiaryData {
     console.log('entra', form, day);
     return this.af.database.list(`/diary2/${this.authData.fireAuth.uid}/${day}`)
     .push(form)
-    // .then(ret => {
-    //   this.lastArray = ret.key
-    //   console.log(this.lastArray);
-    // });
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit , OnChanges} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { AlertController } from 'ionic-angular';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/skip';
@@ -7,46 +7,32 @@ import {AngularFire} from 'angularfire2';
 // servicios
 import { CameraService } from '../../../providers/camera-service';
 import { DiaryData } from '../../../providers/diary-data';
-// import { AuthData } from '../../../providers/auth-data';
 
 @Component({
   selector: 'diary-entry',
   templateUrl: 'diary-entry.html'
 })
 
-export class DiaryEntryComponent implements OnInit, OnChanges {
+export class DiaryEntryComponent {
 
   @Input() day;
   @Input() mealInput;
-  // text: string;
-  // lastImage: string;
-  // mealList;
 
   constructor(
     public camera: CameraService,
     public alertCtrl: AlertController,
     public diaryData: DiaryData,
     public af: AngularFire,
-    // public authData: AuthData
-  ) {
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnChanges() {
-  }
+  ) {}
 
   addText(key?: string){
     let alert = this.alertCtrl.create({
       message: "Que comiste?",
-      inputs: [
-        {
+      inputs: [{
           name: "meal",
           placeholder: "Que comiste?",
           value: this.mealInput.text || ''
-        }
-      ],
+      }],
       buttons: [
         { text: 'Cancelar'},
         { text: 'Guardar',
@@ -83,7 +69,6 @@ export class DiaryEntryComponent implements OnInit, OnChanges {
 
     diaryImageObsFirst.subscribe(
       (imageData:any) => {
-        console.log('localImage', imageData)
         localImages.push(imageData);
         this.update('localImages',localImages)
         .then(
@@ -98,13 +83,11 @@ export class DiaryEntryComponent implements OnInit, OnChanges {
       err => console.log('error en diaryImageObs first', err),
       () => {
         console.log('termino diaryImageObs first')
-        
       }
     )
 
     diaryImageObsSecond.subscribe(
       (imageData:any) => {
-        console.log('webImage', imageData)
         webImages.push(imageData);
         this.update('webImages',webImages, key);
       },
