@@ -13,12 +13,8 @@
 
 <ion-content padding>
 
-<!--   <div *ngFor="let entry of diary2 | sort: 'order':true " >
-      {{ entry.meal }}
-  </div> -->
-
-<div *ngFor="let entry of diary2" >
-  <diary-entry [meal]="entry.meal" [day]="day" [mealInput]="diary"></diary-entry>
+<div *ngFor="let entry of diary" >
+  <diary-entry [day]="day" [mealInput]="entry"></diary-entry>
 </div>
 
   <!-- <diary-entry [meal]="desayuno" [day]="day" [mealInput]="diary"></diary-entry>

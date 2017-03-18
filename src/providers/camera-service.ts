@@ -27,7 +27,7 @@ export class CameraService {
     @Inject(FirebaseApp) firebaseApp: any
   ) {
     this.storage = firebaseApp.storage()
-    console.log('storage', this.storage);
+    // console.log('storage', this.storage);
   }
 
   takePicture(path) {
@@ -107,9 +107,10 @@ export class CameraService {
     File.copyFile(namePath, currentName, cordova.file.dataDirectory, newFileName)
     .then((success) => {
       console.log('copio correctamente')
-      this.data['localPath'] = this.pathForImage(newFileName);
-      console.log('data', JSON.stringify(this.data))
-      this.imageDataSubject.next(this.data);
+      let localImage = this.pathForImage(newFileName);
+      console.log('imagen local', localImage);
+      this.imageDataSubject.next(localImage);
+
       this.toBlob(newFileName)
     }, (err) => {
       console.log('Error en copyFileToLocalDir');
@@ -150,8 +151,7 @@ export class CameraService {
         console.error(error);
     }, () => {
         let downloadURL = uploadTask.snapshot.downloadURL;
-        this.data['url'] = downloadURL;
-        this.imageDataSubject.next(this.data);
+        this.imageDataSubject.next(downloadURL);
     })
   }
 

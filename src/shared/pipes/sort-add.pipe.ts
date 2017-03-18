@@ -8,7 +8,7 @@ import { Injectable, Pipe, PipeTransform } from '@angular/core';
 export class SortAddPipe implements PipeTransform {
 	transform(array: Array<any>, field: string, asc: boolean): Array<any> {
 		if (array) {
-			console.log(array)
+			// console.log(array)
 			let arrayAdded = this.addMeal(array);
 			
 			if (asc){
@@ -38,10 +38,7 @@ export class SortAddPipe implements PipeTransform {
   }
 
   addMeal(array) {
-  	if (!this.findMeal(array, 'desayuno')) {
-  		console.log('no hay desayuno!')
-  		array.push({meal:'desayuno', order:0})
-  	}
+  	if (!this.findMeal(array, 'desayuno')) {array.push({meal:'desayuno', order:0})}
 		if (!this.findMeal(array, 'colacion mañana')) { array.push({meal:'colacion mañana', order:1})}
   	if (!this.findMeal(array, 'almuerzo')) { array.push({meal:'almuerzo', order:2})}
 		if (!this.findMeal(array, 'colacion tarde')) { array.push({meal:'colacion tarde', order:3})}

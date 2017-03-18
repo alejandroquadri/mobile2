@@ -32,7 +32,8 @@ import { DiaryData } from '../providers/diary-data';
 
 // pipes
 import { SortPipe } from '../shared/pipes/sort.pipe';
-import { SortAddPipe } from '../shared/pipes/sortAdd.pipe';
+import { SortAddPipe } from '../shared/pipes/sort-add.pipe';
+import { ObjectToArrayPipe } from '../shared/pipes/object-to-array.pipe';
 
 // settings AF2
 export const firebaseConfig = {
@@ -66,7 +67,8 @@ const myFirebaseAuthConfig = {
     WeekCalendarComponent,
     DiaryEntryComponent,
     SortPipe,
-    SortAddPipe
+    SortAddPipe,
+    ObjectToArrayPipe
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -96,7 +98,8 @@ const myFirebaseAuthConfig = {
     CameraService,
     DiaryData,
     SortPipe,
-    SortAddPipe
+    SortAddPipe,
+    ObjectToArrayPipe
   ]
 })
 export class AppModule {}

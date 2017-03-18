@@ -2,12 +2,12 @@ import { Component, Input, OnInit , OnChanges} from '@angular/core';
 import { AlertController } from 'ionic-angular';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/skip';
-import {AngularFire, FirebaseListObservable} from 'angularfire2';
+import {AngularFire} from 'angularfire2';
 
 // servicios
 import { CameraService } from '../../../providers/camera-service';
 import { DiaryData } from '../../../providers/diary-data';
-import { AuthData } from '../../../providers/auth-data';
+// import { AuthData } from '../../../providers/auth-data';
 
 @Component({
   selector: 'diary-entry',
@@ -17,81 +17,116 @@ import { AuthData } from '../../../providers/auth-data';
 export class DiaryEntryComponent implements OnInit, OnChanges {
 
   @Input() day;
-  @Input() meal: string;
   @Input() mealInput;
-  text: string;
-  lastImage: string;
-  images: FirebaseListObservable<any>;
-  mealList;
+  // text: string;
+  // lastImage: string;
+  // mealList;
 
   constructor(
     public camera: CameraService,
     public alertCtrl: AlertController,
     public diaryData: DiaryData,
     public af: AngularFire,
-    public authData: AuthData
+    // public authData: AuthData
   ) {
   }
 
   ngOnInit() {
-    this.images = this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${this.day.format("YYYYMMDD")}/${this.meal}/images`);
   }
 
   ngOnChanges() {
-    this.images = this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${this.day.format("YYYYMMDD")}/${this.meal}/images`);
   }
 
-  addText(){
+  addText(key?: string){
     let alert = this.alertCtrl.create({
       message: "Que comiste?",
       inputs: [
         {
           name: "meal",
-          placeholder: "Que comiste?"
+          placeholder: "Que comiste?",
+          value: this.mealInput.text || ''
         }
       ],
       buttons: [
         { text: 'Cancelar'},
         { text: 'Guardar',
-      handler: data => {
-        console.log('esto es lo que guardaria', data.meal);
-        let form = {
-          text: data.meal
-        };
-        console.log('esto es lo que guardaria', form, this.day.format("YYYYMMDD"));
-        this.diaryData.updateText(form, this.day.format("YYYYMMDD"), this.meal);
-      }}
+          handler: data => {
+            if (key) {
+              this.update('text',data.meal, key)
+            } else {
+              this.update('text',data.meal);              
+            }
+          }
+        }
       ]
     });
     alert.present();
   }
 
   addPicture(){
-    let day: string = this.day.format("YYYYMMDD");
-    this.camera.takePicture('diary');
+    let localImages, webImages, key
+    if (this.mealInput.localImages){
+      localImages = this.mealInput.localImages;
+    } else {
+      localImages = [];
+    }
+
+    if (this.mealInput.webImages){
+      webImages = this.mealInput.webImages;
+    } else {
+      webImages = [];
+    }
+    
+    this.camera.takePicture('diary2');
     let diaryImageObsFirst = this.camera.imageData.take(1);
     let diaryImageObsSecond = this.camera.imageData.take(2).skip(1);
 
     diaryImageObsFirst.subscribe(
       (imageData:any) => {
-        console.log('data de observable en diary-entry first');
-        this.diaryData.newImage(imageData, day, this.meal);
+        console.log('localImage', imageData)
+        localImages.push(imageData);
+        this.update('localImages',localImages)
+        .then(
+          ret => {
+            console.log('key array', ret.key)
+            key = ret.key
+            if (!this.mealInput.text) {this.addText(key)}
+          },
+          err => console.log('error', err)
+        );
       },
       err => console.log('error en diaryImageObs first', err),
       () => {
         console.log('termino diaryImageObs first')
-        if(!this.mealInput[this.meal]) { this.addText();}
+        
       }
     )
 
     diaryImageObsSecond.subscribe(
       (imageData:any) => {
-        console.log('data de observable en diary-entry second');
-        this.diaryData.updateImage(this.diaryData.lastArray, imageData, day, this.meal);
+        console.log('webImage', imageData)
+        webImages.push(imageData);
+        this.update('webImages',webImages, key);
       },
       err => console.log('error en diaryImageObs second', err),
       () => console.log('termino diaryImageObs second')
     )
+  }
+
+  private update(prop: string, value: any, key?: string): any {
+    let form = {
+      order: this.mealInput.order, 
+      meal: this.mealInput.meal
+    };
+    form[prop] = value;
+    if (this.mealInput.$key || key) {
+      console.log('existe');
+      if (this.mealInput.$key) { key = this.mealInput.$key}
+      return this.diaryData.updateList(form, key, this.day.format("YYYYMMDD"))
+    } else {
+      console.log('no existe');
+      return this.diaryData.pushEntry(form, this.day.format("YYYYMMDD"))
+    }
   }
 
 }

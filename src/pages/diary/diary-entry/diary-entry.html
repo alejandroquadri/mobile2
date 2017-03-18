@@ -2,23 +2,23 @@
   <ion-card>
     
     <ion-card-header>
-      <span left >{{ meal }}</span>
+      <span left >{{ mealInput.meal }}</span>
     </ion-card-header>
 
-    <div class="slides" *ngIf="mealInput[meal]?.images">
+    <div class="slides" *ngIf="mealInput.localImages">
       <div class="addPicture">
         <button ion-fab mini (click)="addPicture()">
           <ion-icon name="add"></ion-icon>
         </button>
       </div>
       <ion-slides pager [options]="mySlideOptions">
-        <ion-slide *ngFor="let image of images | async">
-          <img [src]="image.localPath" class="slide-image"/>
+        <ion-slide *ngFor="let image of mealInput.localImages">
+          <img [src]="image" class="slide-image"/>
         </ion-slide>
       </ion-slides>
     </div>
 
-    <div *ngIf="!mealInput[meal]?.images" class="newMeal">
+    <div *ngIf="!mealInput.localImages" class="newMeal">
       <div class="addPicture">
         <button ion-fab mini (click)="addPicture()">
           <ion-icon name="add"></ion-icon>
@@ -30,8 +30,8 @@
     </div>
 
     <ion-card-content (click)="addText()">
-      <span *ngIf="mealInput[meal]">{{ mealInput[meal].text }}</span>
-      <span *ngIf="!mealInput[meal]">¿Que comiste?</span>
+      <span *ngIf="mealInput.text">{{ mealInput.text }}</span>
+      <span *ngIf="!mealInput.text">¿Que comiste?</span>
     </ion-card-content>
 
     <ion-row>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFire } from 'angularfire2';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -13,34 +13,26 @@ export class DiaryData {
 
   constructor(
     public af: AngularFire,
-    public authData: AuthData
+    public authData: AuthData,
   ) {}
 
-  getDay(day: string){
-    this.dayObs = this.af.database.object(`/diary/${this.authData.fireAuth.uid}/${day}`)
+  getDiary() {
+    return this.af.database.object(`/diary2/${this.authData.fireAuth.uid}`);
   }
 
-  getDay2(day: string): FirebaseListObservable<any[]> {
+  updateList(form, key, day:string): firebase.Promise<void> {
     return this.af.database.list(`/diary2/${this.authData.fireAuth.uid}/${day}`)
+    .update(key, form)
   }
 
-  newImage(image, day:string, meal:string) {
-    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}/images`)
-    .push(image).then( ret => {
-      console.log('retorno', ret.key);
-      this.lastArray = ret.key;
-      return ret.key
-    });
-  }
-
-  updateImage(key, image, day:string, meal:string) {
-    this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}/images`)
-    .update(key, image);
-  }
-
-  updateText(form, day:string, meal:string){
-    this.af.database.object(`/diary/${this.authData.fireAuth.uid}/${day}/${meal}`)
-    .update(form);
+  pushEntry(form, day: string): firebase.database.ThenableReference {
+    console.log('entra', form, day);
+    return this.af.database.list(`/diary2/${this.authData.fireAuth.uid}/${day}`)
+    .push(form)
+    // .then(ret => {
+    //   this.lastArray = ret.key
+    //   console.log(this.lastArray);
+    // });
   }
 
 }

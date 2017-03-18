@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
-import { CameraService } from '../../providers/camera-service';
 import * as moment from 'moment';
 
 // servicios
 import { DiaryData } from '../../providers/diary-data';
 
 // pipes
-import { SortPipe } from '../../shared/pipes/sort.pipe';
-import { SortAddPipe } from '../../shared/pipes/sortAdd.pipe';
+import { SortAddPipe } from '../../shared/pipes/sort-add.pipe';
+import { ObjectToArrayPipe } from '../../shared/pipes/object-to-array.pipe';
 
 @Component({
   selector: 'page-diary',
@@ -17,47 +16,41 @@ import { SortAddPipe } from '../../shared/pipes/sortAdd.pipe';
 export class DiaryPage {
 
   day: any = moment()
+  completeDiary;
   diary;
-  diary2;
 
   constructor(
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public diaryData: DiaryData,
-    public camera: CameraService,
-    private sortPipe: SortPipe,
-    private sortAddPipe: SortAddPipe
+    private sortAddPipe: SortAddPipe,
+    private objectToArray: ObjectToArrayPipe
   ) {
-    this.diaryData.getDay(this.day.format("YYYYMMDD"));
-    this.getData2();
-    // this.diary2 = this.diaryData.getDay2(this.day.format("YYYYMMDD"))
-  }
-
-  ionViewDidLoad() {
     this.getData();
   }
 
-  getData(){
-    this.diaryData.dayObs
-    .subscribe( data => {
-      if (!data.$value) {console.log('vacio')}
-      this.diary = data;
-    })
+  ionViewDidLoad() {
   }
 
-  getData2() {
-    this.diaryData.getDay2(this.day.format("YYYYMMDD"))
-    .subscribe( data => {
-      this.diary2 = this.sortAddPipe.transform(data, 'order', true);
-      console.log('diary2', this.diary2);
+  getData() {
+    this.diaryData.getDiary()
+    .subscribe(data => {
+      this.completeDiary = data;
+      this.diary = this.dateDiary()
     })
   }
 
   setDay(day){
     this.day = day.date;
-    this.diaryData.getDay(this.day.format("YYYYMMDD"));
-    this.getData();
-    this.getData2();
+    this.diary = this.dateDiary();
+  }
+
+  private dateDiary(){
+    let dayDiary = this.completeDiary[this.day.format("YYYYMMDD")]
+    if (!dayDiary) { dayDiary = []}
+    let primero  = this.objectToArray.transform(dayDiary);
+    let segundo = this.sortAddPipe.transform(primero, 'order', true);
+    return segundo;
   }
 
 
