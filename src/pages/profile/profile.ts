@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 import { AngularFire } from 'angularfire2';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/skip';
 
 // clases
 import { ProfileForm } from './profileForm';
@@ -67,5 +68,31 @@ export class ProfilePage {
     err => console.log('error', err),
     () => console.log('termino profileImageObs'))
   }
+
+  updateAvatar2() {
+    this.camera.takePicture('profile');
+
+    let localImageObs = this.camera.imageData.take(1);
+    let webImageObs = this.camera.imageData.take(2).skip(1);
+
+    localImageObs.subscribe(
+      (imageData:any) => {
+        let form = {localPath: imageData}
+        this.profileData.updateProfile(form);
+      },
+      err => console.log('error en localImageObs second', err),
+      () => console.log('termino localImageObs second')
+    )
+
+    webImageObs.subscribe(
+      (imageData:any) => {
+        let form = {url: imageData}
+        this.profileData.updateProfile(form);
+      },
+      err => console.log('error en webImageObs second', err),
+      () => console.log('termino webImageObs second')
+    )
+  }
+
 
 }

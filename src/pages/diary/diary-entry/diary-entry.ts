@@ -63,7 +63,7 @@ export class DiaryEntryComponent {
       webImages = [];
     }
     
-    this.camera.takePicture('diary2');
+    this.camera.takePicture('diary');
     let diaryImageObsFirst = this.camera.imageData.take(1);
     let diaryImageObsSecond = this.camera.imageData.take(2).skip(1);
 

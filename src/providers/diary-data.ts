@@ -17,17 +17,17 @@ export class DiaryData {
   ) {}
 
   getDiary() {
-    return this.af.database.object(`/diary2/${this.authData.fireAuth.uid}`);
+    return this.af.database.object(`/diary/${this.authData.fireAuth.uid}`);
   }
 
   updateList(form, key, day:string): firebase.Promise<void> {
-    return this.af.database.list(`/diary2/${this.authData.fireAuth.uid}/${day}`)
+    return this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}`)
     .update(key, form)
   }
 
   pushEntry(form, day: string): firebase.database.ThenableReference {
     console.log('entra', form, day);
-    return this.af.database.list(`/diary2/${this.authData.fireAuth.uid}/${day}`)
+    return this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}`)
     .push(form)
   }
 
