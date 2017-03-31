@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 import * as moment from 'moment';
 
+// pages
+import { MealDetailPage} from '../meal-detail/meal-detail';
+
 // servicios
 import { DiaryData } from '../../providers/diary-data';
 
@@ -43,6 +46,11 @@ export class DiaryPage {
   setDay(day){
     this.day = day.date;
     this.diary = this.dateDiary();
+  }
+
+  detail(meal: any) {
+    meal['date'] = this.day.format("YYYYMMDD")
+    this.navCtrl.push(MealDetailPage, meal);
   }
 
   private dateDiary(){

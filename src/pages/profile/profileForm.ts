@@ -8,11 +8,3 @@ export class ProfileForm {
     public localPath: string = ''
   ) {}
 }
-
-// public profileForm: any = {
-//   firstName: '',
-//   lastName: '',
-//   bio: '',
-//   displayName: '',
-//   birthDate: '',
-// }

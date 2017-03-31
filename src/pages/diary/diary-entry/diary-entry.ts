@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { AlertController } from 'ionic-angular';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/skip';
@@ -17,6 +17,7 @@ export class DiaryEntryComponent {
 
   @Input() day;
   @Input() mealInput;
+  @Output() detail = new EventEmitter();
 
   constructor(
     public camera: CameraService,
@@ -24,6 +25,10 @@ export class DiaryEntryComponent {
     public diaryData: DiaryData,
     public af: AngularFire,
   ) {}
+
+  goToDetail(meal) {
+    this.detail.emit(meal);
+  }
 
   addText(key?: string){
     let alert = this.alertCtrl.create({

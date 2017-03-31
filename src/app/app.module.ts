@@ -19,6 +19,7 @@ import { SignupPage } from '../pages/signup/signup';
 import { ProfilePage } from '../pages/profile/profile';
 import { ProgressPage } from '../pages/progress/progress';
 import { CoachPage } from '../pages/coach/coach';
+import { MealDetailPage } from '../pages/meal-detail/meal-detail';
 
 // Components
 import { WeekCalendarComponent } from '../pages/diary/week-calendar/week-calendar';
@@ -34,6 +35,7 @@ import { DiaryData } from '../providers/diary-data';
 import { SortPipe } from '../shared/pipes/sort.pipe';
 import { SortAddPipe } from '../shared/pipes/sort-add.pipe';
 import { ObjectToArrayPipe } from '../shared/pipes/object-to-array.pipe';
+import { ObjectIteratePipe } from '../shared/pipes/object-iterate.pipe';
 
 // settings AF2
 export const firebaseConfig = {
@@ -64,11 +66,13 @@ const myFirebaseAuthConfig = {
     ProfilePage,
     ProgressPage,
     CoachPage,
+    MealDetailPage,
     WeekCalendarComponent,
     DiaryEntryComponent,
     SortPipe,
     SortAddPipe,
-    ObjectToArrayPipe
+    ObjectToArrayPipe,
+    ObjectIteratePipe,
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -88,6 +92,7 @@ const myFirebaseAuthConfig = {
     ProfilePage,
     ProgressPage,
     CoachPage,
+    MealDetailPage,
     WeekCalendarComponent,
     DiaryEntryComponent
   ],
@@ -99,7 +104,8 @@ const myFirebaseAuthConfig = {
     DiaryData,
     SortPipe,
     SortAddPipe,
-    ObjectToArrayPipe
+    ObjectToArrayPipe,
+    ObjectIteratePipe
   ]
 })
 export class AppModule {}

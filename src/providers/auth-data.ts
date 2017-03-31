@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AngularFire} from 'angularfire2';
+import { AngularFire } from 'angularfire2';
 
 @Injectable()
 export class AuthData {
   current: any;
   public userProfile: any;
   fireAuth: any;
+  user: any
 
   constructor(
-    public af: AngularFire
+    public af: AngularFire,
   ) {
     af.auth.subscribe( user => {
       if (user) {
@@ -46,13 +47,20 @@ export class AuthData {
     return this.current = user;
   }
 
+  setProfileData(form: any): any {
+    console.log(form);
+    const profileForm = {};
+    if (form.displayName) { 
+      console.log('hay displayname')
+      profileForm['displayName'] = form.displayName 
+    }
+    if (form.photoURL) { 
+      console.log('hay photoURL')
+      profileForm['photoURL'] = form.photoURL 
+    }
+    console.log(profileForm);
+    this.user.updateProfile(profileForm);
+  }
+
 }
 
-// usando firebase JS SDK
-// signupUser(newEmail: string, newPassword: string): any {
-//   return this.af.auth.createUser({ email: newEmail, password: newPassword })
-//   .then(newUser => {
-//     firebase.database().ref('/userProfile').child(newUser.uid)
-//     .set({email:newEmail, coach: false});
-//   })
-//  }

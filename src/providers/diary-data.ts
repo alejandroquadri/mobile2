@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFire } from 'angularfire2';
+import { AngularFire, FirebaseObjectObservable } from 'angularfire2';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -16,7 +16,7 @@ export class DiaryData {
     public authData: AuthData,
   ) {}
 
-  getDiary() {
+  getDiary(): FirebaseObjectObservable<any> {
     return this.af.database.object(`/diary/${this.authData.fireAuth.uid}`);
   }
 
@@ -29,6 +29,15 @@ export class DiaryData {
     console.log('entra', form, day);
     return this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}`)
     .push(form)
+  }
+
+  getMeal(day, array): FirebaseObjectObservable<any> {
+    return this.af.database.object(`/diary/${this.authData.fireAuth.uid}/${day}/${array}`)
+  }
+
+  pushReview(day,array,review): firebase.database.ThenableReference {
+    return this.af.database.list(`/diary/${this.authData.fireAuth.uid}/${day}/${array}/reviews`)
+    .push(review);
   }
 
 }
