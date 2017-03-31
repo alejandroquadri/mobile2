@@ -4,12 +4,13 @@ week-calendar {
     text-align: center;
   }
 
-  // button {
-  //   text-align: center;
-  //   background-color: transparent;
-  //   display: block;
-  //   width: 100%;
-  // }
+  .days {
+    padding: 0px;
+    margin: 0px;
+    color: black;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+  }
 
   ion-row {
     border-style: solid;

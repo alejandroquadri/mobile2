@@ -75,7 +75,9 @@ const myFirebaseAuthConfig = {
     ObjectIteratePipe,
   ],
   imports: [
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      pageTransition: 'md-transition'
+    }), // esto es para que junto tappable no tarde unos segundos en hacer click
     AngularFireModule.initializeApp(firebaseConfig, myFirebaseAuthConfig)
   ],
   bootstrap: [IonicApp],
